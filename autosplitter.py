@@ -61,7 +61,8 @@ def send_livesplit(command: str) -> None:
 def monitor() -> None:
     current_seed: str | None = None   # 現在のランのシード値
     current_lvl:  int        = -1     # 現在の内部フロアインデックス
-    last_pos:     int        = 0      # 前回読み込んだファイルの末尾位置
+    # 起動時点のファイル末尾から監視開始（既存の古いエントリを無視する）
+    last_pos:     int        = os.path.getsize(LOG_FILE) if os.path.exists(LOG_FILE) else 0
 
     print("=" * 45)
     print("  Pogostuck Auto-Splitter")
