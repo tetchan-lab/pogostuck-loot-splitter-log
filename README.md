@@ -1,5 +1,7 @@
 # Pogostuck Loot Mode Auto-Splitter (Log-based)
 
+[English version available here → README.en.md](./README.en.md)
+
 LiveSplitと連動して、Pogostuck の **Loot Mode（ルートモード）** のフロア進行を自動でスプリットするツールです。
 
 ゲームのログファイル（`acklog.txt`）を監視する方式のため、**画面キャプチャ不要・OCR不要**で動作します。
