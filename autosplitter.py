@@ -139,8 +139,8 @@ def monitor() -> None:
                 if current_seed is not None and not is_paused:
                     if re.search(r" ~~~~~~ open menu frame \d+", chunk):
                         is_paused = True
-                        print(f"\n[ポーズ] Floor {current_lvl + 1} でポーズ → pausegametime")
-                        send_livesplit("pausegametime")
+                        print(f"\n[ポーズ] Floor {current_lvl + 1} でポーズ → pause")
+                        send_livesplit("pause")
 
                 # ---------------------------------------------------
                 # パターン4: ポーズ解除
@@ -149,8 +149,8 @@ def monitor() -> None:
                 if current_seed is not None and is_paused:
                     if re.search(r"menu_item_function_default: menu_close\(\)", chunk):
                         is_paused = False
-                        print(f"\n[再開] Floor {current_lvl + 1} で再開 → unpausegametime")
-                        send_livesplit("unpausegametime")
+                        print(f"\n[再開] Floor {current_lvl + 1} で再開 → resume")
+                        send_livesplit("resume")
 
         except Exception as e:
             print(f"エラー: {e}")
