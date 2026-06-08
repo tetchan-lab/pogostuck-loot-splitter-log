@@ -61,6 +61,7 @@ def send_livesplit(command: str) -> None:
 def monitor() -> None:
     current_seed: str | None = None   # 現在のランのシード値
     current_lvl:  int        = -1     # 現在の内部フロアインデックス
+    is_paused:    bool       = False  # ポーズ中かどうか
     # 起動時点のファイル末尾から監視開始（既存の古いエントリを無視する）
     last_pos:     int        = os.path.getsize(LOG_FILE) if os.path.exists(LOG_FILE) else 0
 
@@ -88,6 +89,7 @@ def monitor() -> None:
                 last_pos     = 0
                 current_seed = None
                 current_lvl  = -1
+                is_paused    = False
 
             # 新しい内容がある場合のみ読み込む
             if stat.st_size > last_pos:
@@ -129,6 +131,26 @@ def monitor() -> None:
                         current_lvl = lvl
                         print(f"\n[Floor {prev_lvl + 1} → Floor {lvl + 1}] → split")
                         send_livesplit("split")
+
+                # ---------------------------------------------------
+                # パターン3: ポーズ開始
+                #   " ~~~~~~ open menu frame XXX | ..."
+                # ---------------------------------------------------
+                if current_seed is not None and not is_paused:
+                    if re.search(r" ~~~~~~ open menu frame \d+", chunk):
+                        is_paused = True
+                        print(f"\n[ポーズ] Floor {current_lvl + 1} でポーズ → pausegametime")
+                        send_livesplit("pausegametime")
+
+                # ---------------------------------------------------
+                # パターン4: ポーズ解除
+                #   "menu_item_function_default: menu_close() C at frame XXX"
+                # ---------------------------------------------------
+                if current_seed is not None and is_paused:
+                    if re.search(r"menu_item_function_default: menu_close\(\)", chunk):
+                        is_paused = False
+                        print(f"\n[再開] Floor {current_lvl + 1} で再開 → unpausegametime")
+                        send_livesplit("unpausegametime")
 
         except Exception as e:
             print(f"エラー: {e}")
