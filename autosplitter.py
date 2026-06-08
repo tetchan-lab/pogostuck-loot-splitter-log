@@ -144,10 +144,11 @@ def monitor() -> None:
 
                 # ---------------------------------------------------
                 # パターン4: ポーズ解除
-                #   "menu_item_function_default: menu_close() C at frame XXX"
+                #   "menu_item_function_default: menu_close() C at frame XXX"（メニュー操作）
+                #   "close menu now at frame XXX"（ポーズボタンで再度押して解除）
                 # ---------------------------------------------------
                 if current_seed is not None and is_paused:
-                    if re.search(r"menu_item_function_default: menu_close\(\)", chunk):
+                    if re.search(r"menu_item_function_default: menu_close\(\)|close menu now at frame \d+", chunk):
                         is_paused = False
                         print(f"\n[再開] Floor {current_lvl + 1} で再開 → resume")
                         send_livesplit("resume")
